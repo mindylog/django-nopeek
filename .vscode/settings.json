@@ -1,0 +1,10 @@
+{
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black",
+    "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
+    "python.linting.pylintPath": ".venv/bin/pylint",
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": {"when": "$(basename).py"},
+    }
+}
