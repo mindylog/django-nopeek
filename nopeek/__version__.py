@@ -1,0 +1,8 @@
+__title__ = "django-nopeek"
+__description__ = "No peek! A Django package for encrypting sensitive data"
+__url__ = "https://github.com/mindylog/django-nopeek"
+__version__ = "0.0.1"
+__author__ = "@mindylog https://github.com/mindylog"
+__author_email__ = "developers@mindy.page"
+__license__ = "MIT"
+__copyright__ = "Copyright 2021 @mindylog https://github.com/mindylog"
