@@ -11,10 +11,8 @@ NOPEEK_SETTINGS = {
 
 from django.conf import settings
 
-from .utils import import_callable
-
 DEFAULT_SETTINGS = {
-    "CIPHER_MODULE": import_callable("tink.aead"),
+    "CIPHER_MODULE": "tink.aead",
     "KMS_INTEGRATION_CLIENT": None,
     "KEYSET_PATH": None,
 }
