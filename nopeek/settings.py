@@ -3,9 +3,9 @@
 In settings.py,
 
 NOPEEK_SETTINGS = {
-    "CIPHER_MODULE": "tink.daead",
-    "KMS_INTEGRATION_CLIENT": "tink.integration.gcpkms.GcpKmsClient",
-    "KEYSET_PATH": "gcp-kms://projects/tink-examples/locations/global/keyRings/foo/cryptoKeys/bar",
+    "CIPHER_MODULE": "tink.aead",
+    "CREDENTIAL_PATH": "/app/mypath/keyset.json",
+    "CIPHER_PRIMITIVE": "Aead",
 }
 """
 
@@ -13,7 +13,8 @@ from django.conf import settings
 
 DEFAULT_SETTINGS = {
     "CIPHER_MODULE": "tink.aead",
-    "KMS_INTEGRATION_CLIENT": None,
+    "CREDENTIAL_PATH": None,
+    "CIPHER_PRIMITIVE": "Aead",
     "KEYSET_PATH": None,
 }
 

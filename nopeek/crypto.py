@@ -49,10 +49,10 @@ class DefaultCipher(BaseCipher):
                 raise InvalidKeyFileError(f"Error reading key: {e}")
         self.cipher = keyset_handle.primitive(getattr(self.module, nopeek_settings["CIPHER_PRIMITIVE"]))
 
-    def encrypt(self, input_data: Any, associated_data: str) -> str:
+    def encrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
         return self.cipher.encrypt(input_data, associated_data)
 
-    def decrypt(self, input_data: Any, associated_data: str) -> str:
+    def decrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
         return self.cipher.decrypt(input_data, associated_data)
 
 
