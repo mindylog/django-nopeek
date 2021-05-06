@@ -6,5 +6,9 @@ class CipherInitialisationError(TinkError):
     """Cipher register failed exception"""
 
 
+class InvalidKeyFileError(TinkError):
+    """Cipher keyset is invalid exception"""
+
+
 class EncryptedFieldException(Exception):
     """Encrypted Field base exception"""
