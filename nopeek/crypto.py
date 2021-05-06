@@ -17,6 +17,7 @@ class BaseCipher:
         try:
             cipher = import_callable(nopeek_settings["CIPHER_MODULE"])
             cipher.register()
+            self.cipher = cipher
         except tink.TinkError:
             raise CipherInitialisationError(
                 "Failed when initialising cipher module {}".format(nopeek_settings["CIPHER_MODULE"])
