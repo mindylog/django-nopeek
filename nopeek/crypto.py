@@ -8,12 +8,12 @@ from .utils import import_callable
 
 
 class BaseCipher:
-    """BaseCrypter Class"""
+    """BaseCipher Class"""
 
     __metaclass__ = abc.ABCMeta
 
     def __init__(self) -> None:
-        """Base Crypter Class Constructor"""
+        """Base Cipher Class Constructor"""
         try:
             cipher = import_callable(nopeek_settings["CIPHER_MODULE"])
             cipher.register()
@@ -34,8 +34,8 @@ class BaseCipher:
 
 
 class DefaultCipher(BaseCipher):
-    """DefaultCrypter Class"""
+    """DefaultCipher Class"""
 
 
-class KMSCrypter(BaseCipher):
-    """KMSCrypter Class"""
+class KMSClientCipher(BaseCipher):
+    """KMSCipher Class"""
