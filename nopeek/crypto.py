@@ -7,7 +7,7 @@ from .settings import nopeek_settings
 from .utils import import_callable
 
 
-class BaseCrypter:
+class BaseCipher:
     """BaseCrypter Class"""
 
     __metaclass__ = abc.ABCMeta
@@ -25,15 +25,17 @@ class BaseCrypter:
     @abc.abstractmethod
     def encrypt(self) -> None:
         """Encrypt plain text"""
+        raise NotImplementedError("Method encrypt is not implemented.")
 
     @abc.abstractmethod
     def decrypt(self) -> None:
         """Decrypt cipher text"""
+        raise NotImplementedError("Method decrypt is not implemented.")
 
 
-class DefaultCrypter(BaseCrypter):
+class DefaultCipher(BaseCipher):
     """DefaultCrypter Class"""
 
 
-class KMSCrypter(BaseCrypter):
+class KMSCrypter(BaseCipher):
     """KMSCrypter Class"""
