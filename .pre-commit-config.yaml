@@ -11,6 +11,7 @@ repos:
         name: Run isort to sort imports
         files: \.py$
         exclude: ^build/.*$|^.tox/.*$|^venv/.*$
+        args: ["--profile", "black"]
   - repo: https://github.com/psf/black
     rev: 20.8b1
     hooks:
