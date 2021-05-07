@@ -12,9 +12,8 @@ NOPEEK_SETTINGS = {
 from django.conf import settings
 
 DEFAULT_SETTINGS = {
-    "CIPHER_MODULE": "tink.aead",
-    "CREDENTIAL_PATH": None,
-    "CIPHER_PRIMITIVE": "Aead",
+    "CIPHER_CLASS": "nopeek.crypto.DefaultCipher",
+    "CIPHER_TEMPLATE": "AES128_GCM",
     "KEYSET_PATH": None,
 }
 

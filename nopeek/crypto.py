@@ -2,11 +2,16 @@ import abc
 from typing import Any
 
 import tink
-from tink import cleartext_keyset_handle
+from tink import TinkError, cleartext_keyset_handle, tink_config
 
-from .exceptions import CipherInitialisationError, InvalidKeyFileError
-from .settings import nopeek_settings
-from .utils import import_callable
+from nopeek.enums import TinkTemplate
+from nopeek.exceptions import (
+    CipherInitialisationError,
+    InvalidKeyFileError,
+    NotSupportModuleError,
+    WrongPrimitiveError,
+)
+from nopeek.settings import nopeek_settings
 
 
 class BaseCipher:
@@ -17,9 +22,17 @@ class BaseCipher:
     def __init__(self) -> None:
         """Base Cipher Class Constructor"""
         try:
-            module = import_callable(nopeek_settings["CIPHER_MODULE"])
-            module.register()
+            template_name = nopeek_settings["CIPHER_TEMPLATE"]
+            module_name, template_root, template = TinkTemplate[template_name]
+        except KeyError:
+            raise KeyError("Invalid or unset template. Please use valid CIPHER_TEMPLATE.")
+        try:
+            module = getattr(tink, module_name)
+            tink_config.register()
+            self.module_name = module_name
             self.module = module
+            self.template_root = template_root
+            self.template = template
         except tink.TinkError:
             raise CipherInitialisationError(
                 "Failed when initialising cipher module {}".format(nopeek_settings["CIPHER_MODULE"])
@@ -41,19 +54,37 @@ class DefaultCipher(BaseCipher):
 
     def __init__(self) -> None:
         super().__init__()
-        with open(nopeek_settings["CREDENTIAL_PATH"]) as keyset_file:
+        with open(nopeek_settings["KEYSET_PATH"]) as keyset_file:
             try:
                 text = keyset_file.read()
                 keyset_handle = cleartext_keyset_handle.read(tink.JsonKeysetReader(text))
             except tink.TinkError as e:
                 raise InvalidKeyFileError(f"Error reading key: {e}")
-        self.cipher = keyset_handle.primitive(getattr(self.module, nopeek_settings["CIPHER_PRIMITIVE"]))
+
+        primitive = "Aead"
+
+        if self.module_name == "daead":
+            primitive = "DeterministicAead"
+        try:
+            self.cipher = keyset_handle.primitive(getattr(self.module, primitive))
+        except TinkError as e:
+            raise WrongPrimitiveError(f"Error initialisation with {e}")
 
     def encrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
-        return self.cipher.encrypt(input_data, associated_data)
+        if self.module_name == "aead":
+            return self.cipher.encrypt(input_data, associated_data)
+        elif self.module_name == "daead":
+            return self.cipher.encrypt_deterministically(input_data, associated_data)
+        else:
+            raise NotSupportModuleError("Only can use few encryption module(aead, daead).")
 
     def decrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
-        return self.cipher.decrypt(input_data, associated_data)
+        if self.module_name == "aead":
+            return self.cipher.decrypt(input_data, associated_data)
+        elif self.module_name == "daead":
+            return self.cipher.decrypt_deterministically(input_data, associated_data)
+        else:
+            raise NotSupportModuleError("Only can use few encryption module(aead, daead).")
 
 
 class KMSClientCipher(BaseCipher):

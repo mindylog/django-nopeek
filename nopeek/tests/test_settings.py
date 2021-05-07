@@ -3,7 +3,7 @@
 INSTALLED_APPS = ("nopeek",)
 
 NOPEEK_SETTINGS = {
-    "CIPHER_MODULE": "tink.aead",
-    "CREDENTIAL_PATH": "/app/mypath/keyset.json",
-    "CIPHER_PRIMITIVE": "Aead",
+    "CIPHER_CLASS": "nopeek.crypto.DefaultCipher",
+    "CIPHER_TEMPLATE": "AES256_GCM",
+    "KEYSET_PATH": "./keyset.json",
 }
