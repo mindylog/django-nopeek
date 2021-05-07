@@ -5,7 +5,7 @@ import tink
 from django.core.management.base import BaseCommand, CommandError, CommandParser
 from tink import cleartext_keyset_handle, tink_config
 
-from ._enums import TinkTemplate
+from nopeek.enums import TinkTemplate
 
 
 class Command(BaseCommand):
@@ -16,7 +16,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser: CommandParser) -> None:
         """Add keygen arguments"""
         parser.add_argument(
-            "key_path", type=str, help="Where the key will be stored and What is the key name"
+            "key_path",
+            type=str,
+            help="Where the key will be stored and What is the key name",
         )
         parser.add_argument("--template", type=str, help="Template for keyset", default="AES128_GCM")
 
