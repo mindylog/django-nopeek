@@ -106,7 +106,8 @@ class KMSClientCipher(BaseCipher):
 
         if (not key_uri) or (scheme(key_uri) not in KMSScheme._value2member_map_):  # pylint: disable=E1101
             raise UnknownKMSClientError()
-        elif nopeek_settings.get("KMS_CREDENTIALS"):
+
+        if not nopeek_settings.get("KMS_CREDENTIALS"):
             raise CredentialNotConfigured()
 
         scheme_type = KMSScheme(scheme(key_uri))
