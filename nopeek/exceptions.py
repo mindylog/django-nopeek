@@ -32,3 +32,7 @@ class CredentialNotConfigured(Exception):
 
 class KMSRegistrationFailed(Exception):
     """KMS Registration Failed"""
+
+
+class DetermisticAeadNotSupported(Exception):
+    """Daead is not supported"""

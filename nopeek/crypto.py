@@ -9,6 +9,7 @@ from nopeek.enums import KMSScheme, TinkTemplate
 from nopeek.exceptions import (
     CipherInitialisationError,
     CredentialNotConfigured,
+    DetermisticAeadNotSupported,
     InvalidKeyFileError,
     KMSRegistrationFailed,
     NotSupportModuleError,
@@ -97,13 +98,19 @@ class KMSClientCipher(BaseCipher):
 
     def __init__(self) -> None:
         super().__init__()
+
+        if self.module_name == "daead":
+            raise DetermisticAeadNotSupported()
+
         key_uri = nopeek_settings.get("KEY_URI")
+
         if (not key_uri) or (scheme(key_uri) not in KMSScheme._value2member_map_):  # pylint: disable=E1101
             raise UnknownKMSClientError()
         elif nopeek_settings.get("KMS_CREDENTIALS"):
             raise CredentialNotConfigured()
 
         scheme_type = KMSScheme(scheme(key_uri))
+
         try:
             if scheme_type == KMSScheme.GCP:
                 self.client = gcpkms.GcpKmsClient(key_uri, nopeek_settings["KMS_CREDENTIALS"])
