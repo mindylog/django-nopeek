@@ -16,3 +16,10 @@ class TinkTemplate(tuple, Enum):
     AES128_CTR_HMAC_SHA256 = ("aead", "aead_key_templates", "AES128_CTR_HMAC_SHA256")
     AES256_CTR_HMAC_SHA256 = ("aead", "aead_key_templates", "AES256_CTR_HMAC_SHA256")
     XCHACHA20_POLY1305 = ("aead", "aead_key_templates", "XCHACHA20_POLY1305")
+
+
+class KMSScheme(str, Enum):
+    """KMS Schemes"""
+
+    GCP = "gcp-kms"
+    AWS = "aws-kms"

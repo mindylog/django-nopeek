@@ -3,15 +3,20 @@ from typing import Any
 
 import tink
 from tink import TinkError, cleartext_keyset_handle, tink_config
+from tink.integration import awskms, gcpkms
 
-from nopeek.enums import TinkTemplate
+from nopeek.enums import KMSScheme, TinkTemplate
 from nopeek.exceptions import (
     CipherInitialisationError,
+    CredentialNotConfigured,
     InvalidKeyFileError,
+    KMSRegistrationFailed,
     NotSupportModuleError,
+    UnknownKMSClientError,
     WrongPrimitiveError,
 )
 from nopeek.settings import nopeek_settings
+from nopeek.utils import scheme
 
 
 class BaseCipher:
@@ -89,3 +94,20 @@ class DefaultCipher(BaseCipher):
 
 class KMSClientCipher(BaseCipher):
     """KMSCipher Class"""
+
+    def __init__(self) -> None:
+        super().__init__()
+        key_uri = nopeek_settings.get("KEY_URI")
+        if (not key_uri) or (scheme(key_uri) not in KMSScheme._value2member_map_):  # pylint: disable=E1101
+            raise UnknownKMSClientError()
+        elif nopeek_settings.get("KMS_CREDENTIALS"):
+            raise CredentialNotConfigured()
+
+        scheme_type = KMSScheme(scheme(key_uri))
+        try:
+            if scheme_type == KMSScheme.GCP:
+                self.client = gcpkms.GcpKmsClient(key_uri, nopeek_settings["KMS_CREDENTIALS"])
+            else:
+                self.client = awskms.AwsKmsClient(key_uri, nopeek_settings["KMS_CREDENTIALS"])
+        except TinkError as e:
+            raise KMSRegistrationFailed(e)

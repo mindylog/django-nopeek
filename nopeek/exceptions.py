@@ -20,3 +20,15 @@ class EncryptedFieldException(Exception):
 
 class NotSupportModuleError(Exception):
     """Cipher Module is not acceptable"""
+
+
+class UnknownKMSClientError(Exception):
+    """Unknown KMS Client Exception"""
+
+
+class CredentialNotConfigured(Exception):
+    """Credential not configured"""
+
+
+class KMSRegistrationFailed(Exception):
+    """KMS Registration Failed"""
