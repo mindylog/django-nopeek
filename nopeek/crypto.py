@@ -118,3 +118,11 @@ class KMSClientCipher(BaseCipher):
                 self.client = awskms.AwsKmsClient(key_uri, nopeek_settings["KMS_CREDENTIALS"])
         except TinkError as e:
             raise KMSRegistrationFailed(e)
+
+        self.cipher = self.client.get_aead(key_uri)
+
+    def encrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
+        return self.cipher.encrypt(input_data, associated_data)
+
+    def decrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
+        return self.cipher.decrypt(input_data, associated_data)
