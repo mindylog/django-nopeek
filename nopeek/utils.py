@@ -1,6 +1,7 @@
 """Utilities"""
 
 from typing import Callable, Union
+from urllib.parse import urlparse
 
 from django.utils.module_loading import import_string
 
@@ -25,3 +26,15 @@ def import_callable(path_or_callable: Union[Callable, str]) -> Callable:
     else:
         message = f"Passed parameter {path_or_callable} is not callable or string."
         raise TypeError(message)
+
+
+def scheme(uri: str) -> str:
+    """Parse URI scheme
+
+    Args:
+        uri (str): uri
+
+    Returns:
+        str: uri scheme
+    """
+    return urlparse(uri).scheme
