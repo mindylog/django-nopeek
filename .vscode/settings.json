@@ -1,5 +1,6 @@
 {
     "python.formatting.provider": "black",
+    "python.formatting.blackArgs": ["--config=./.pyproject.toml"],
     "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
     "python.linting.pylintPath": ".venv/bin/pylint",
     "files.exclude": {
