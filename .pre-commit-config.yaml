@@ -32,7 +32,6 @@ repos:
       - id: debug-statements
       - id: check-builtin-literals
       - id: detect-private-key
-        exclude: ^tests/
       - id: end-of-file-fixer
       - id: mixed-line-ending
       - id: check-executables-have-shebangs
