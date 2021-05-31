@@ -15,6 +15,7 @@ DEFAULT_SETTINGS = {
     "CIPHER_CLASS": "nopeek.crypto.DefaultCipher",
     "CIPHER_TEMPLATE": "AES128_GCM",
     "KEYSET_PATH": None,
+    "CYPHERTEXT_PREFIX": None,
 }
 
 nopeek_settings = getattr(settings, "NOPEEK_SETTINGS", DEFAULT_SETTINGS)
