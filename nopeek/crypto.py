@@ -2,7 +2,7 @@ import abc
 from typing import Any
 
 import tink
-from tink import TinkError, cleartext_keyset_handle, tink_config
+from tink import TinkError, aead, cleartext_keyset_handle, tink_config
 from tink.integration import awskms, gcpkms
 
 from nopeek.enums import KMSScheme, TinkTemplate
@@ -13,6 +13,7 @@ from nopeek.exceptions import (
     InvalidKeyFileError,
     KMSRegistrationFailed,
     NotSupportModuleError,
+    TemplateNotFoundException,
     UnknownKMSClientError,
     WrongPrimitiveError,
 )
@@ -117,10 +118,17 @@ class KMSClientCipher(BaseCipher):
                 self.client = gcpkms.GcpKmsClient(key_uri, nopeek_settings["KMS_CREDENTIALS"])
             else:
                 self.client = awskms.AwsKmsClient(key_uri, nopeek_settings["KMS_CREDENTIALS"])
+
+            cloud_aead = self.client.get_aead(key_uri)
+
         except TinkError as e:
             raise KMSRegistrationFailed(e)
 
-        self.cipher = self.client.get_aead(key_uri)
+        try:
+            key_template = getattr(getattr(self.module, self.template_root), self.template)
+        except AttributeError:
+            raise TemplateNotFoundException()
+        self.cipher = aead.KmsEnvelopeAead(key_template, cloud_aead)
 
     def encrypt(self, input_data: bytes, associated_data: bytes) -> bytes:
         return self.cipher.encrypt(input_data, associated_data)

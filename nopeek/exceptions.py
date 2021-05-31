@@ -36,3 +36,7 @@ class KMSRegistrationFailed(Exception):
 
 class DetermisticAeadNotSupported(Exception):
     """Daead is not supported"""
+
+
+class TemplateNotFoundException(Exception):
+    """TemplateNotFoundException"""
